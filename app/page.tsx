@@ -1,65 +1,221 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+
+type Record = {
+  id: string;
+  name: string;
+  school: string;
+  district: string;
+  state: string;
+  date: string;
+  incident_type: string;
+  case_status: string;
+  summary: string;
+  source_url: string;
+  source_label?: string;
+};
+
+const ALLOWED_STATUSES = ["Convicted", "Guilty Plea", "License Revoked"];
 
 export default function Home() {
+  const [records, setRecords] = useState<Record[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [stateFilter, setStateFilter] = useState("");
+  const [typeFilter, setTypeFilter] = useState("");
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/records.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load records");
+        return res.json();
+      })
+      .then((data: Record[]) => {
+        setRecords(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message || "Failed to load records");
+        setLoading(false);
+      });
+  }, []);
+
+  const visibleRecords = useMemo(
+    () => records.filter((r) => ALLOWED_STATUSES.includes(r.case_status)),
+    [records]
+  );
+
+  const states = useMemo(
+    () =>
+      Array.from(new Set(visibleRecords.map((r) => r.state)))
+        .filter(Boolean)
+        .sort(),
+    [visibleRecords]
+  );
+
+  const types = useMemo(
+    () =>
+      Array.from(new Set(visibleRecords.map((r) => r.incident_type)))
+        .filter(Boolean)
+        .sort(),
+    [visibleRecords]
+  );
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return visibleRecords.filter((r) => {
+      if (stateFilter && r.state !== stateFilter) return false;
+      if (typeFilter && r.incident_type !== typeFilter) return false;
+      if (!q) return true;
+      const haystack = [
+        r.name,
+        r.school,
+        r.district,
+        r.state,
+        r.incident_type,
+        r.case_status,
+        r.summary,
+      ]
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [visibleRecords, query, stateFilter, typeFilter]);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="bf-page">
+      <header className="bf-header">
+        <div className="bf-header-inner">
+          <h1 className="bf-brand">
+            BadFaculty<span className="bf-brand-tld">.com</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+          <p className="bf-tagline">The Record, Plainly Stated</p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+      </header>
+
+      <main className="bf-main">
+        <section className="bf-controls">
+          <input
+            type="search"
+            className="bf-search"
+            placeholder="Search by name, school, district, or keyword..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Search records"
+          />
+          <div className="bf-filters">
+            <select
+              className="bf-select"
+              value={stateFilter}
+              onChange={(e) => setStateFilter(e.target.value)}
+              aria-label="Filter by state"
+            >
+              <option value="">All states</option>
+              {states.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+            <select
+              className="bf-select"
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value)}
+              aria-label="Filter by incident type"
+            >
+              <option value="">All incident types</option>
+              {types.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+          </div>
+        </section>
+
+        {loading && <p className="bf-status">Loading records...</p>}
+        {error && <p className="bf-status bf-error">Error: {error}</p>}
+
+        {!loading && !error && (
+          <>
+            <p className="bf-count">
+              {filtered.length}{" "}
+              {filtered.length === 1 ? "record" : "records"} found
+            </p>
+
+            <ul className="bf-list">
+              {filtered.map((r) => {
+                const isOpen = expanded === r.id;
+                return (
+                  <li key={r.id} className="bf-card">
+                    <button
+                      className="bf-card-head"
+                      onClick={() => setExpanded(isOpen ? null : r.id)}
+                      aria-expanded={isOpen}
+                    >
+                      <div className="bf-card-title">
+                        <span className="bf-name">{r.name}</span>
+                        <span className="bf-sub">
+                          {r.school} &middot; {r.district}, {r.state}
+                        </span>
+                      </div>
+                      <div className="bf-card-meta">
+                        <span className="bf-badge">{r.case_status}</span>
+                        <span className="bf-chevron">{isOpen ? "-" : "+"}</span>
+                      </div>
+                    </button>
+
+                    {isOpen && (
+                      <div className="bf-card-body">
+                        <dl className="bf-details">
+                          <div className="bf-detail">
+                            <dt>Date</dt>
+                            <dd>{r.date}</dd>
+                          </div>
+                          <div className="bf-detail">
+                            <dt>Incident type</dt>
+                            <dd>{r.incident_type}</dd>
+                          </div>
+                          <div className="bf-detail">
+                            <dt>Status</dt>
+                            <dd>{r.case_status}</dd>
+                          </div>
+                          <div className="bf-detail">
+                            <dt>State</dt>
+                            <dd>{r.state}</dd>
+                          </div>
+                        </dl>
+                        <p className="bf-summary">{r.summary}</p>
+                        {r.source_url && (
+                          <a
+                            className="bf-source"
+                            href={r.source_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {r.source_label || "View source"}
+                          </a>
+                        )}
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+
+            {filtered.length === 0 && (
+              <p className="bf-status">No records match your search.</p>
+            )}
+          </>
+        )}
       </main>
+
+      <footer className="bf-footer">
+        <p>BadFaculty.com &middot; The Record, Plainly Stated</p>
+      </footer>
     </div>
   );
 }
