@@ -1,106 +1,46 @@
-[
-  {
-    "id": "rec-001",
-    "name": "Jonathan Reeves",
-    "school": "Lincoln High School",
-    "district": "Maple Grove Unified",
-    "state": "California",
-    "date": "2023-04-18",
-    "incident_type": "Misappropriation of Funds",
-    "case_status": "Convicted",
-    "summary": "Former athletics coordinator was found to have diverted booster-club funds over three seasons. A jury returned a conviction following a two-week trial.",
-    "source_url": "https://example.com/records/rec-001",
-    "source_label": "Court records"
-  },
-  {
-    "id": "rec-002",
-    "name": "Amanda Cole",
-    "school": "Riverside Middle School",
-    "district": "Riverside County Schools",
-    "state": "Texas",
-    "date": "2022-11-02",
-    "incident_type": "Grade Tampering",
-    "case_status": "Guilty Plea",
-    "summary": "A mathematics teacher entered a guilty plea to charges related to altering student transcripts in exchange for payment. Sentencing followed the plea agreement.",
-    "source_url": "https://example.com/records/rec-002",
-    "source_label": "District statement"
-  },
-  {
-    "id": "rec-003",
-    "name": "David Okonkwo",
-    "school": "Northgate Elementary",
-    "district": "Northgate Public Schools",
-    "state": "New York",
-    "date": "2024-01-27",
-    "incident_type": "Falsified Credentials",
-    "case_status": "License Revoked",
-    "summary": "State board proceedings established that the individual had submitted fraudulent certification documents. The teaching license was permanently revoked.",
-    "source_url": "https://example.com/records/rec-003",
-    "source_label": "State board order"
-  },
-  {
-    "id": "rec-004",
-    "name": "Karen Whitfield",
-    "school": "Summit Academy",
-    "district": "Summit Charter Network",
-    "state": "Florida",
-    "date": "2023-08-14",
-    "incident_type": "Financial Fraud",
-    "case_status": "Convicted",
-    "summary": "A former business office administrator was convicted of a multi-year invoicing scheme involving fictitious vendors.",
-    "source_url": "https://example.com/records/rec-004",
-    "source_label": "Court records"
-  },
-  {
-    "id": "rec-005",
-    "name": "Marcus Bell",
-    "school": "Eastview High School",
-    "district": "Eastview Unified",
-    "state": "Texas",
-    "date": "2022-05-09",
-    "incident_type": "Testing Misconduct",
-    "case_status": "Guilty Plea",
-    "summary": "An assistant principal pleaded guilty to coordinating improper access to standardized test materials ahead of the exam window.",
-    "source_url": "https://example.com/records/rec-005",
-    "source_label": "Prosecutor filing"
-  },
-  {
-    "id": "rec-006",
-    "name": "Rachel Nunez",
-    "school": "Hillcrest Preparatory",
-    "district": "Hillcrest Independent",
-    "state": "California",
-    "date": "2024-03-30",
-    "incident_type": "Misconduct",
-    "case_status": "License Revoked",
-    "summary": "Following an administrative hearing, the state education agency revoked the educator's license for repeated policy violations.",
-    "source_url": "https://example.com/records/rec-006",
-    "source_label": "Agency ruling"
-  },
-  {
-    "id": "rec-007",
-    "name": "Thomas Pierce",
-    "school": "Greenwood High School",
-    "district": "Greenwood County Schools",
-    "state": "New York",
-    "date": "2024-06-11",
-    "incident_type": "Misconduct",
-    "case_status": "Under Investigation",
-    "summary": "Allegations are currently under review by the district. No findings have been made. This record should NOT appear on the public site.",
-    "source_url": "https://example.com/records/rec-007",
-    "source_label": "Pending"
-  },
-  {
-    "id": "rec-008",
-    "name": "Susan Alvarez",
-    "school": "Bayfront Elementary",
-    "district": "Bayfront Unified",
-    "state": "Florida",
-    "date": "2023-02-20",
-    "incident_type": "Misconduct",
-    "case_status": "Charges Dismissed",
-    "summary": "Charges in this matter were dismissed. This record should NOT appear on the public site.",
-    "source_url": "https://example.com/records/rec-008",
-    "source_label": "Court records"
-  }
-]
+{
+  "records": [
+    {
+      "id": 1,
+      "name": "Example Person",
+      "school": "Example High School",
+      "district": "Example County Schools",
+      "county": "Example",
+      "state": "Kentucky",
+      "incident_type": "Sexual Misconduct",
+      "case_status": "Convicted",
+      "date": "2026-06-15",
+      "summary": "This is a sample public-record summary. Replace it with a factual, original summary supported by the linked public source.",
+      "source_outlet": "Example News",
+      "source_url": "https://example.com/source"
+    },
+    {
+      "id": 2,
+      "name": "Second Example Person",
+      "school": "Example Middle School",
+      "district": "Sample Public Schools",
+      "county": "Sample",
+      "state": "Florida",
+      "incident_type": "Fraud / Financial",
+      "case_status": "Guilty Plea",
+      "date": "2026-05-10",
+      "summary": "This is another sample record. Replace this record with verified public-source data before launch.",
+      "source_outlet": "Example Newspaper",
+      "source_url": "https://example.com/second-source"
+    },
+    {
+      "id": 3,
+      "name": "Third Example Person",
+      "school": "Sample Elementary School",
+      "district": "Sample Independent Schools",
+      "county": "Sample",
+      "state": "Ohio",
+      "incident_type": "License Action",
+      "case_status": "License Revoked",
+      "date": "2026-04-03",
+      "summary": "This sample demonstrates the license-revoked status style. Replace this with a verified public licensing source.",
+      "source_outlet": "Example Licensing Board",
+      "source_url": "https://example.com/third-source"
+    }
+  ]
+}
